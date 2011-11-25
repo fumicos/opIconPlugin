@@ -1,0 +1,15 @@
+favicon_show:
+  url: /favicon/show
+  param: { module: favicon, action: show }
+
+favicon_show2: # こちらの方が分かりやすく、毎度action側で getById しなくていい
+  url: /favicon/show2/:id
+  param: { module: favicon, action: show }
+  class: sfDoctrineRoute
+  requirements:
+    id: \d+
+  options: { model: AdminUser, type: object }
+
+favicon_default:
+  url: /favicon/*
+  param: { module: default, action: error }

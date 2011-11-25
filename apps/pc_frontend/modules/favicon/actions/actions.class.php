@@ -1,5 +1,4 @@
 <?php
-
 /**
  * favicon actions.
  *
@@ -9,12 +8,47 @@
  */
 class faviconActions extends sfActions
 {
- /**
-  * Executes index action
-  *
-  * @param sfWebRequest $request A request object
-  */
-  public function executeIndex(sfWebRequest $request)
+  public function preExecute()
   {
+    if (is_callable(array($this->getRoute(), 'getObject')))
+    {
+      try
+      {
+        $object = $this->getRoute()->getObject();
+      }
+      catch (sfError404Exception $e)
+      {
+        $this->forwardUnless($this->getUser()->isSNSMember(),
+            sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
+
+        throw $e;
+      }
+      if ($object instanceof AdminUser)
+      {
+        $this->user = $object;
+      }
+    }
+  }
+
+/*  public function executeNew($request)
+  {
+    $diary = array ();
+    $this->diary = $diary;
+//    if(count($diary) == 0){
+//      return sfView::ERROR;
+//      }
+    return sfView::NONE; // sfView::NONE はテンプレートを使用しません
+// return sfView::SUCCESS; は省略できる
+  }*/
+
+  public function executeShow(sfWebRequest $request)
+  {
+//    $this->users = Doctrine::getTable('AdminUser')->retrievesAll();
+//    $this->user = Doctrine::getTable('AdminUser')->getById(2);
+    if (!$this->user)
+    {
+      $id = $request->getParameter('id');
+      $this->user = Doctrine::getTable('AdminUser')->getById($id);
+    }
   }
 }

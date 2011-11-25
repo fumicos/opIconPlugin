@@ -1,0 +1,3 @@
+all:
+  is_secure: true # ログイン必要になる
+  credentials: SNSMember # 3.4以降は無くてもよい
